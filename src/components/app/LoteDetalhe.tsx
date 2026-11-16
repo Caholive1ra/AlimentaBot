@@ -1,4 +1,10 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { useDemo } from "@/hooks/use-demo";
 import { CATEGORIA_LABEL, CONSERVACAO_LABEL } from "@/lib/domain/models";
 import { fmtData, fmtKg, fmtKm, horasRestantes } from "@/lib/format";
@@ -18,12 +24,19 @@ export function LoteDetalhe({ id, onClose }: { id: string | null; onClose: () =>
             <SheetHeader>
               <p className="font-mono text-xs text-muted-foreground">{l.id}</p>
               <SheetTitle className="font-display text-xl">{l.item}</SheetTitle>
-              <SheetDescription asChild><div><StatusBadge status={l.status} /></div></SheetDescription>
+              <SheetDescription asChild>
+                <div>
+                  <StatusBadge status={l.status} />
+                </div>
+              </SheetDescription>
             </SheetHeader>
             <dl className="mt-4 grid grid-cols-2 gap-3 px-4 text-sm">
               {[
                 ["Categoria", CATEGORIA_LABEL[l.categoria]],
-                ["Quantidade", `${fmtKg(l.quantidadeKg)}${l.unidades ? ` · ${l.unidades} un.` : ""}`],
+                [
+                  "Quantidade",
+                  `${fmtKg(l.quantidadeKg)}${l.unidades ? ` · ${l.unidades} un.` : ""}`,
+                ],
                 ["Conservação", CONSERVACAO_LABEL[l.conservacao]],
                 ["Validade", `${fmtData(l.validade)} (${horasRestantes(l.validade)})`],
                 ["Preparo", fmtData(l.preparadoEm)],
@@ -41,8 +54,18 @@ export function LoteDetalhe({ id, onClose }: { id: string | null; onClose: () =>
             </dl>
             {(l.observacoes || l.motivo) && (
               <div className="mx-4 mt-3 rounded-xl border p-3 text-sm">
-                {l.observacoes && <p><span className="text-muted-foreground">Observações: </span>{l.observacoes}</p>}
-                {l.motivo && <p className="text-destructive"><span className="font-medium">Motivo: </span>{l.motivo}</p>}
+                {l.observacoes && (
+                  <p>
+                    <span className="text-muted-foreground">Observações: </span>
+                    {l.observacoes}
+                  </p>
+                )}
+                {l.motivo && (
+                  <p className="text-destructive">
+                    <span className="font-medium">Motivo: </span>
+                    {l.motivo}
+                  </p>
+                )}
               </div>
             )}
             <div className="px-4 pb-6">
@@ -52,7 +75,10 @@ export function LoteDetalhe({ id, onClose }: { id: string | null; onClose: () =>
                   <li key={e.id} className="relative">
                     <span className="absolute -left-[27px] top-1 h-3 w-3 rounded-full border-2 border-card bg-success" />
                     <p className="text-sm font-medium">{e.acao}</p>
-                    <p className="text-xs text-muted-foreground">{fmtData(e.ts)} · {e.ator}{e.detalhe ? ` · ${e.detalhe}` : ""}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {fmtData(e.ts)} · {e.ator}
+                      {e.detalhe ? ` · ${e.detalhe}` : ""}
+                    </p>
                   </li>
                 ))}
                 {!eventos.length && <li className="text-sm text-muted-foreground">Sem eventos.</li>}

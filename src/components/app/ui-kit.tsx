@@ -17,15 +17,28 @@ const statusStyle: Record<StatusLote, string> = {
 
 export function StatusBadge({ status }: { status: StatusLote }) {
   return (
-    <span className={cn("inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold", statusStyle[status])}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold",
+        statusStyle[status],
+      )}
+    >
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
       {STATUS_LABEL[status]}
     </span>
   );
 }
 
-const consIcon: Record<Conservacao, LucideIcon> = { ambiente: Sun, refrigerado: Thermometer, congelado: Snowflake };
-const consTxt: Record<Conservacao, string> = { ambiente: "Ambiente", refrigerado: "Refrigerado", congelado: "Congelado" };
+const consIcon: Record<Conservacao, LucideIcon> = {
+  ambiente: Sun,
+  refrigerado: Thermometer,
+  congelado: Snowflake,
+};
+const consTxt: Record<Conservacao, string> = {
+  ambiente: "Ambiente",
+  refrigerado: "Refrigerado",
+  congelado: "Congelado",
+};
 export function ConservacaoTag({ c }: { c: Conservacao }) {
   const I = consIcon[c];
   return (
@@ -35,7 +48,19 @@ export function ConservacaoTag({ c }: { c: Conservacao }) {
   );
 }
 
-export function MetricCard({ icon: Icon, label, value, hint, tone = "default" }: { icon: LucideIcon; label: string; value: ReactNode; hint?: string; tone?: "default" | "lime" | "success" | "warning" }) {
+export function MetricCard({
+  icon: Icon,
+  label,
+  value,
+  hint,
+  tone = "default",
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: ReactNode;
+  hint?: string;
+  tone?: "default" | "lime" | "success" | "warning";
+}) {
   const tones = {
     default: "bg-secondary text-primary",
     lime: "bg-accent/30 text-accent-foreground",
@@ -56,7 +81,15 @@ export function MetricCard({ icon: Icon, label, value, hint, tone = "default" }:
   );
 }
 
-export function PageHeader({ title, desc, actions }: { title: string; desc?: string; actions?: ReactNode }) {
+export function PageHeader({
+  title,
+  desc,
+  actions,
+}: {
+  title: string;
+  desc?: string;
+  actions?: ReactNode;
+}) {
   return (
     <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div>
@@ -68,7 +101,19 @@ export function PageHeader({ title, desc, actions }: { title: string; desc?: str
   );
 }
 
-export function Panel({ title, desc, actions, children, className }: { title?: string; desc?: string; actions?: ReactNode; children: ReactNode; className?: string }) {
+export function Panel({
+  title,
+  desc,
+  actions,
+  children,
+  className,
+}: {
+  title?: string;
+  desc?: string;
+  actions?: ReactNode;
+  children: ReactNode;
+  className?: string;
+}) {
   return (
     <section className={cn("rounded-2xl border bg-card shadow-soft", className)}>
       {(title || actions) && (
@@ -85,10 +130,20 @@ export function Panel({ title, desc, actions, children, className }: { title?: s
   );
 }
 
-export function Empty({ icon: Icon, title, desc }: { icon: LucideIcon; title: string; desc?: string }) {
+export function Empty({
+  icon: Icon,
+  title,
+  desc,
+}: {
+  icon: LucideIcon;
+  title: string;
+  desc?: string;
+}) {
   return (
     <div className="flex flex-col items-center justify-center rounded-xl border border-dashed px-6 py-10 text-center">
-      <span className="grid h-11 w-11 place-items-center rounded-full bg-secondary text-primary"><Icon className="h-5 w-5" /></span>
+      <span className="grid h-11 w-11 place-items-center rounded-full bg-secondary text-primary">
+        <Icon className="h-5 w-5" />
+      </span>
       <p className="mt-3 font-medium">{title}</p>
       {desc && <p className="mt-1 max-w-sm text-sm text-muted-foreground">{desc}</p>}
     </div>
@@ -97,7 +152,12 @@ export function Empty({ icon: Icon, title, desc }: { icon: LucideIcon; title: st
 
 export function DemoChip({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-1.5 rounded-full border border-warning/50 bg-warning/15 px-3 py-1 text-[11px] font-bold tracking-wide text-warning-foreground", className)}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full border border-warning/50 bg-warning/15 px-3 py-1 text-[11px] font-bold tracking-wide text-warning-foreground",
+        className,
+      )}
+    >
       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-warning" />
       DEMONSTRAÇÃO • DADOS SINTÉTICOS
     </span>

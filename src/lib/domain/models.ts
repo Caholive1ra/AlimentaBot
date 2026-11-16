@@ -2,12 +2,7 @@
 export type Papel = "doador" | "gestor" | "transportador" | "instituicao";
 export type Conservacao = "ambiente" | "refrigerado" | "congelado";
 export type Categoria =
-  | "hortifruti"
-  | "panificacao"
-  | "refeicao_pronta"
-  | "laticinios"
-  | "graos"
-  | "proteinas";
+  "hortifruti" | "panificacao" | "refeicao_pronta" | "laticinios" | "graos" | "proteinas";
 
 export type StatusLote =
   | "PENDENTE_REVISAO"

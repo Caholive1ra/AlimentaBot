@@ -1,0 +1,2 @@
+"""Backend demonstrativo do AlimentaBot."""
+

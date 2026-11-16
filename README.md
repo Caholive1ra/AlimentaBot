@@ -44,3 +44,11 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Operação e produção
+
+O projeto possui ambientes locais separados para demo, API e PostgreSQL. Consulte
+[`docs/PRODUCAO.md`](docs/PRODUCAO.md) antes de configurar Render ou Vercel: o backend
+tem definição de serviço em `render.yaml`, mas o frontend ainda usa preset Nitro para
+Cloudflare e não deve ser publicado na Vercel até que esse preset/roteamento seja
+validado. Nunca versione `.env`, tokens Auth0 ou URLs de banco.

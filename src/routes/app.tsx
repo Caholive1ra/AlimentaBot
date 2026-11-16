@@ -1,8 +1,28 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { Bell, ChartNoAxesCombined, HandHeart, LayoutDashboard, ShieldCheck, Store, Truck, ArrowLeft } from "lucide-react";
 import {
-  Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader,
-  SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarTrigger,
+  Bell,
+  ChartNoAxesCombined,
+  HandHeart,
+  LayoutDashboard,
+  ShieldCheck,
+  Store,
+  Truck,
+  ArrowLeft,
+} from "lucide-react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -16,7 +36,11 @@ export const Route = createFileRoute("/app")({
   head: () => ({
     meta: [
       { title: "Plataforma AlimentaBot — Demonstração" },
-      { name: "description", content: "MVP demonstrativo do AlimentaBot com dados sintéticos: doador, gestor, transportador e instituição." },
+      {
+        name: "description",
+        content:
+          "MVP demonstrativo do AlimentaBot com dados sintéticos: doador, gestor, transportador e instituição.",
+      },
       { property: "og:title", content: "Plataforma AlimentaBot — Demonstração" },
       { property: "og:description", content: "MVP demonstrativo com dados sintéticos locais." },
       { name: "robots", content: "noindex" },
@@ -44,7 +68,10 @@ function AppLayout() {
         <Sidebar collapsible="icon">
           <SidebarHeader className="px-3 py-4">
             <Link to="/" className="flex items-center" aria-label="Voltar à página inicial">
-              <Logo tone="light" className="group-data-[collapsible=icon]:[&>span:last-child]:hidden" />
+              <Logo
+                tone="light"
+                className="group-data-[collapsible=icon]:[&>span:last-child]:hidden"
+              />
             </Link>
           </SidebarHeader>
           <SidebarContent>
@@ -55,7 +82,10 @@ function AppLayout() {
                   {nav.map((n) => (
                     <SidebarMenuItem key={n.to}>
                       <SidebarMenuButton asChild isActive={path === n.to} tooltip={n.label}>
-                        <Link to={n.to}><n.icon /><span>{n.label}</span></Link>
+                        <Link to={n.to}>
+                          <n.icon />
+                          <span>{n.label}</span>
+                        </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
@@ -67,7 +97,10 @@ function AppLayout() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Voltar ao site">
-                  <Link to="/"><ArrowLeft /><span>Voltar ao site</span></Link>
+                  <Link to="/">
+                    <ArrowLeft />
+                    <span>Voltar ao site</span>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -97,14 +130,18 @@ function AppLayout() {
                   {s.notificacoes.slice(0, 12).map((n) => (
                     <li key={n.id} className="px-4 py-2.5 text-sm">
                       <p>{n.texto}</p>
-                      <p className="text-xs text-muted-foreground">{fmtData(n.ts)} · para {n.papel}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {fmtData(n.ts)} · para {n.papel}
+                      </p>
                     </li>
                   ))}
                 </ul>
               </PopoverContent>
             </Popover>
           </header>
-          <div className="px-4 pt-3 sm:hidden"><DemoChip /></div>
+          <div className="px-4 pt-3 sm:hidden">
+            <DemoChip />
+          </div>
           <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:px-8 md:py-8">
             <Outlet />
           </div>

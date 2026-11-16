@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: alimentabot_test
+          POSTGRES_USER: alimentabot_test
+          POSTGRES_PASSWORD: alimentabot_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U alimentabot_test -d alimentabot_test"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgresql+psycopg://alimentabot_test:alimentabot_test@localhost:5432/alimentabot_test
+      DEMO_MODE_ENABLED: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e "backend[dev]"
+      - run: cd backend && alembic upgrade head && alembic current
+      - run: cd backend && pytest -q
+      - run: python -m pip check
+      - run: npm audit --omit=dev --audit-level=high

@@ -99,26 +99,50 @@
   --sidebar-border: oklch(0.4 0.04 166);
   --sidebar-ring: var(--lime);
 
-  --gradient-hero: radial-gradient(ellipse at 85% 10%, color-mix(in oklab, var(--lime) 35%, transparent), transparent 55%),
+  --gradient-hero:
+    radial-gradient(
+      ellipse at 85% 10%,
+      color-mix(in oklab, var(--lime) 35%, transparent),
+      transparent 55%
+    ),
     linear-gradient(160deg, var(--forest), oklch(0.27 0.045 170));
-  --shadow-soft: 0 1px 2px color-mix(in oklab, var(--forest) 6%, transparent),
+  --shadow-soft:
+    0 1px 2px color-mix(in oklab, var(--forest) 6%, transparent),
     0 12px 32px -12px color-mix(in oklab, var(--forest) 18%, transparent);
   --shadow-lift: 0 24px 60px -24px color-mix(in oklab, var(--forest) 45%, transparent);
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
+  * {
+    border-color: var(--color-border);
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
 }
 
-@utility bg-hero { background: var(--gradient-hero); }
-@utility shadow-soft { box-shadow: var(--shadow-soft); }
-@utility shadow-lift { box-shadow: var(--shadow-lift); }
-@utility blob { border-radius: 42% 58% 63% 37% / 45% 40% 60% 55%; }
-@utility font-display { font-family: var(--font-display); }
+@utility bg-hero {
+  background: var(--gradient-hero);
+}
+@utility shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+@utility shadow-lift {
+  box-shadow: var(--shadow-lift);
+}
+@utility blob {
+  border-radius: 42% 58% 63% 37% / 45% 40% 60% 55%;
+}
+@utility font-display {
+  font-family: var(--font-display);
+}

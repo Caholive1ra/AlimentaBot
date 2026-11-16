@@ -83,10 +83,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "AlimentaBot" },
-      { name: "description", content: "AlimentaBot conecta excedentes seguros de alimentos a instituições." },
+      {
+        name: "description",
+        content: "AlimentaBot conecta excedentes seguros de alimentos a instituições.",
+      },
       { name: "author", content: "AlimentaBot" },
       { property: "og:title", content: "AlimentaBot" },
-      { property: "og:description", content: "AlimentaBot conecta excedentes seguros de alimentos a instituições." },
+      {
+        property: "og:description",
+        content: "AlimentaBot conecta excedentes seguros de alimentos a instituições.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
