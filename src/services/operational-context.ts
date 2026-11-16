@@ -20,9 +20,10 @@ function apiBaseUrl() {
 }
 
 export async function getOperationalContext(accessToken: string): Promise<OperationalContext> {
+  const baseUrl = apiBaseUrl();
   let response: Response;
   try {
-    response = await fetch(`${apiBaseUrl()}/me`, {
+    response = await fetch(`${baseUrl}/me`, {
       headers: { Accept: "application/json", Authorization: `Bearer ${accessToken}` },
     });
   } catch {
