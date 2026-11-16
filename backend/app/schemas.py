@@ -3,7 +3,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from app.models import Conservation, LotStatus, ReviewDecision
+from app.models import Conservation, LotStatus, OrganizationRole, ReviewDecision
 
 
 class Schema(BaseModel):
@@ -101,3 +101,46 @@ class CustodyEventRead(Schema):
     detail: str | None
     created_at: datetime
     is_simulation: bool
+
+
+PUBLIC_REQUEST_ROLES = {
+    OrganizationRole.DOADOR,
+    OrganizationRole.TRANSPORTADOR,
+    OrganizationRole.INSTITUICAO,
+}
+
+
+class PublicRegistrationRequest(Schema):
+    requested_role: OrganizationRole
+    organization_name: str = Field(min_length=3, max_length=160)
+
+    @model_validator(mode="after")
+    def only_public_operating_roles(self):
+        if self.requested_role not in PUBLIC_REQUEST_ROLES:
+            raise ValueError("papel administrativo não pode ser solicitado publicamente")
+        return self
+
+
+class InvitationCreate(Schema):
+    recipient_subject: str = Field(min_length=3, max_length=255)
+    role: OrganizationRole
+    expires_at: datetime
+
+
+class InvitationAccept(Schema):
+    token: str = Field(min_length=32, max_length=512)
+    name: str = Field(min_length=2, max_length=160)
+
+
+class InvitationRead(Schema):
+    id: uuid.UUID
+    organization_id: uuid.UUID
+    recipient_subject: str
+    role: OrganizationRole
+    expires_at: datetime
+    accepted_at: datetime | None
+    revoked_at: datetime | None
+
+
+class InvitationIssued(InvitationRead):
+    token: str

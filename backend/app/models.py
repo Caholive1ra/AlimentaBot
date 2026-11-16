@@ -11,17 +11,24 @@ from app.core.database import Base
 
 class Role(str, enum.Enum):
     DOADOR = "doador"
-    GESTOR = "gestor"
     TRANSPORTADOR = "transportador"
     INSTITUICAO = "instituicao"
+    OPERADOR = "operador"
+    GESTOR = "gestor"
+    REVISOR_AUTORIZADO = "revisor_autorizado"
+    ADMIN_ORGANIZACAO = "admin_organizacao"
+    ADMIN_PLATAFORMA = "admin_plataforma"
 
 
 class OrganizationRole(str, enum.Enum):
-    OWNER = "owner"
     DOADOR = "doador"
-    GESTOR = "gestor"
     TRANSPORTADOR = "transportador"
     INSTITUICAO = "instituicao"
+    OPERADOR = "operador"
+    GESTOR = "gestor"
+    REVISOR_AUTORIZADO = "revisor_autorizado"
+    ADMIN_ORGANIZACAO = "admin_organizacao"
+    ADMIN_PLATAFORMA = "admin_plataforma"
 
 
 class Conservation(str, enum.Enum):
@@ -79,6 +86,50 @@ class OrganizationMember(Base, BaseEntity):
     active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     organization: Mapped[Organization] = relationship(back_populates="members")
     user: Mapped[User] = relationship(back_populates="memberships")
+
+
+class AccessRequest(Base, BaseEntity):
+    """A public request is not a membership and grants no operating access."""
+
+    __tablename__ = "access_requests"
+    auth_subject: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    requested_role: Mapped[OrganizationRole] = mapped_column(Enum(OrganizationRole, name="organization_role", create_type=False), nullable=False)
+    organization_name: Mapped[str] = mapped_column(String(160), nullable=False)
+    status: Mapped[str] = mapped_column(String(30), default="PENDENTE", nullable=False)
+
+
+class AccessInvitation(Base, BaseEntity):
+    """Single-use invite. Only a hash is persisted; the raw token is returned once."""
+
+    __tablename__ = "access_invitations"
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    recipient_subject: Mapped[str] = mapped_column(String(255), nullable=False)
+    organization_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
+    role: Mapped[OrganizationRole] = mapped_column(Enum(OrganizationRole, name="organization_role", create_type=False), nullable=False)
+    invited_by_user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    accepted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    accepted_by_user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"))
+
+
+class AccessAuditEvent(Base, BaseEntity):
+    __tablename__ = "access_audit_events"
+    actor_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"))
+    target_user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"))
+    organization_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("organizations.id"))
+    action: Mapped[str] = mapped_column(String(80), nullable=False)
+    detail: Mapped[str | None] = mapped_column(Text)
+
+
+class DemoSession(Base, BaseEntity):
+    """Anonymous, non-privileged capability for one synthetic demo dataset."""
+
+    __tablename__ = "demo_sessions"
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    organization_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("organizations.id"), unique=True, nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
 
 class Institution(Base, BaseEntity):

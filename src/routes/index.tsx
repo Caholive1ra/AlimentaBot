@@ -89,8 +89,8 @@ const publico = [
   },
   {
     i: Users,
-    t: "Gestores",
-    d: "Equipes que revisam lotes e acompanham o ciclo com rastreabilidade.",
+    t: "Gestores e operadores",
+    d: "Acesso operacional concedido exclusivamente por convite autorizado.",
   },
 ];
 const faq: [string, string][] = [
@@ -100,7 +100,7 @@ const faq: [string, string][] = [
   ],
   [
     "Quem garante a segurança do alimento?",
-    "A plataforma organiza informações e exige revisão humana antes da liberação. Na demonstração, essa revisão é hipotética e não substitui avaliação sanitária real.",
+    "A plataforma organiza informações e exige revisão humana antes da liberação. Quando aplicável, a validação sanitária depende de profissional legalmente habilitado; o registro do sistema não é atestado sanitário.",
   ],
   [
     "A IA decide para onde vai a comida?",
@@ -139,9 +139,11 @@ function Landing() {
               Dúvidas
             </a>
           </nav>
-          <Button asChild variant="lime" size="sm">
-            <Link to="/app">Acessar plataforma</Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button asChild variant="lime" size="sm">
+              <Link to="/experiencia">Explorar demonstração</Link>
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -161,14 +163,18 @@ function Landing() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild variant="lime" size="lg">
-                <Link to="/app">
-                  Acessar plataforma <ArrowRight />
+                <Link to="/experiencia">
+                  Explorar demonstração <ArrowRight />
                 </Link>
               </Button>
               <Button asChild variant="heroOutline" size="lg">
                 <a href="#como-funciona">Como funciona</a>
               </Button>
             </div>
+            <p className="mt-5 max-w-xl text-sm text-primary-foreground/75">
+              Demonstração acadêmica com dados fictícios. A revisão humana simulada não equivale a
+              uma validação ou atestado sanitário real.
+            </p>
           </div>
           <div className="relative">
             <div className="blob absolute -inset-4 bg-accent/25" aria-hidden />
@@ -368,8 +374,8 @@ function Landing() {
             Sem login. Dados sintéticos só no seu navegador, reiniciáveis a qualquer momento.
           </p>
           <Button asChild variant="lime" size="lg" className="mt-8">
-            <Link to="/app">
-              Acessar plataforma <ArrowRight />
+            <Link to="/experiencia">
+              Explorar demonstração <ArrowRight />
             </Link>
           </Button>
         </div>

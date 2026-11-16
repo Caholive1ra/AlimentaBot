@@ -58,7 +58,9 @@ function Auth0StateProvider({ children }: { children: ReactNode }) {
         },
         logout: () => auth.logout({ logoutParams: { returnTo: window.location.origin } }),
         getAccessToken: async () => {
-          const token = await auth.getAccessTokenSilently();
+          const token = await auth.getAccessTokenSilently({
+            authorizationParams: { audience: config.audience },
+          });
           if (!token) throw new Error("Não foi possível obter um access token para a API.");
           return token;
         },

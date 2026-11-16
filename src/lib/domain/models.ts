@@ -1,5 +1,5 @@
 // Modelos de domínio do AlimentaBot. Espelham o contrato esperado de uma futura API REST.
-export type Papel = "doador" | "gestor" | "transportador" | "instituicao";
+export type Papel = "doador" | "gestor" | "operador" | "transportador" | "instituicao";
 export type Conservacao = "ambiente" | "refrigerado" | "congelado";
 export type Categoria =
   "hortifruti" | "panificacao" | "refeicao_pronta" | "laticinios" | "graos" | "proteinas";

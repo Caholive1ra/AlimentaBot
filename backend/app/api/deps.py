@@ -1,11 +1,12 @@
 import uuid
 from dataclasses import dataclass
+import logging
 
 from fastapi import Depends, Header, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
-from app.core.auth import AuthenticatedPrincipal, resolve_principal, validate_access_token
+from app.core.auth import AuthenticatedPrincipal, resolve_principal, subject_from_claims, validate_access_token
 from app.core.database import get_db
 from app.core.config import get_settings
 from app.models import Role
@@ -19,6 +20,19 @@ class DemoActor:
 
 
 bearer_scheme = HTTPBearer(auto_error=False)
+logger = logging.getLogger(__name__)
+
+
+def _missing_bearer(credentials: HTTPAuthorizationCredentials | None) -> None:
+    category = "missing_authorization_header" if credentials is None else "malformed_bearer_token"
+    logger.warning("auth_request_rejected category=%s", category)
+    raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Bearer token é obrigatório")
+
+
+def get_authenticated_subject(credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme)) -> str:
+    if not credentials or credentials.scheme.lower() != "bearer":
+        _missing_bearer(credentials)
+    return subject_from_claims(validate_access_token(credentials.credentials))
 
 
 def get_authenticated_principal(
@@ -27,7 +41,7 @@ def get_authenticated_principal(
     db: Session = Depends(get_db),
 ) -> AuthenticatedPrincipal:
     if not credentials or credentials.scheme.lower() != "bearer":
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Bearer token é obrigatório")
+        _missing_bearer(credentials)
     if organization_id is None:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Organization scope is required")
     return resolve_principal(db, validate_access_token(credentials.credentials), organization_id)

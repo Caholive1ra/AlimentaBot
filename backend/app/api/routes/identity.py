@@ -1,17 +1,15 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
-from app.api.deps import get_authenticated_principal
-from app.core.auth import AuthenticatedPrincipal
+from app.api.deps import get_authenticated_subject
+from app.core.database import get_db
+from app.services.identity import context_for_subject
 
 
 router = APIRouter(tags=["identity"])
 
 
 @router.get("/me")
-def me(principal: AuthenticatedPrincipal = Depends(get_authenticated_principal)) -> dict:
-    return {
-        "user_id": str(principal.user_id),
-        "subject": principal.subject,
-        "organization_id": str(principal.organization_id),
-        "roles": sorted(principal.roles),
-    }
+def me(subject: str = Depends(get_authenticated_subject), db: Session = Depends(get_db)) -> dict:
+    """Return only memberships already authorized on the server; no organization header is accepted."""
+    return context_for_subject(db, subject)

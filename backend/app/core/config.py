@@ -1,4 +1,5 @@
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -7,14 +8,18 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     app_env: str = "development"
     database_url: str = "postgresql+psycopg://alimentabot:alimentabot@localhost:5432/alimentabot"
-    cors_origins: str = "http://localhost:3000,http://localhost:5173"
+    cors_origins: str = "http://localhost:3000,http://localhost:5173,http://localhost:8080"
     auth0_domain: str | None = None
     auth0_audience: str | None = None
     demo_mode_enabled: bool = False
     db_pool_size: int = 5
     db_max_overflow: int = 2
     max_request_body_bytes: int = 1_048_576
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    # Resolve from backend/, not from the process working directory.
+    model_config = SettingsConfigDict(
+        env_file=Path(__file__).resolve().parents[2] / ".env",
+        extra="ignore",
+    )
 
     @property
     def cors_origin_list(self) -> list[str]:
