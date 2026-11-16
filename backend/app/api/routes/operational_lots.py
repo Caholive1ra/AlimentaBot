@@ -7,7 +7,7 @@ from app.api.deps import get_authenticated_principal
 from app.core.auth import AuthenticatedPrincipal
 from app.core.database import get_db
 from app.repositories.lots import list_for_organization
-from app.schemas import LotRead, LotUpdate, OperationalLotCreate, Page
+from app.schemas import LotRead, LotUpdate, OperationalLotCreate, Page, ReviewCreate
 from app.services import operational_lots
 
 router = APIRouter(prefix="/operational/lots", tags=["operational-lots"])
@@ -37,3 +37,8 @@ def update_lot(lot_id: uuid.UUID, payload: LotUpdate, db: Session = Depends(get_
 @router.post("/{lot_id}/reservations", response_model=LotRead)
 def reserve_lot(lot_id: uuid.UUID, idempotency_key: str = Header(alias="Idempotency-Key", min_length=8, max_length=128), db: Session = Depends(get_db), principal: AuthenticatedPrincipal = Depends(get_authenticated_principal)) -> LotRead:
     return operational_lots.reserve(db, lot_id, principal, idempotency_key)
+
+
+@router.post("/{lot_id}/reviews", response_model=LotRead)
+def review_lot(lot_id: uuid.UUID, payload: ReviewCreate, db: Session = Depends(get_db), principal: AuthenticatedPrincipal = Depends(get_authenticated_principal)) -> LotRead:
+    return operational_lots.review(db, lot_id, payload, principal)

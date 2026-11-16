@@ -7,9 +7,9 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.auth import AuthenticatedPrincipal
-from app.models import CustodyEvent, Lot, LotStatus, OrganizationRole, Reservation
+from app.models import CustodyEvent, Institution, Lot, LotStatus, OrganizationRole, Reservation, ReviewDecision, SanitaryReview
 from app.repositories.lots import get_for_organization
-from app.schemas import LotUpdate, OperationalLotCreate
+from app.schemas import LotUpdate, OperationalLotCreate, ReviewCreate
 from app.services.lots import assert_not_expired, now_utc
 
 
@@ -77,5 +77,30 @@ def reserve(db: Session, lot_id: uuid.UUID, principal: AuthenticatedPrincipal, i
     except IntegrityError as error:
         db.rollback()
         raise HTTPException(status.HTTP_409_CONFLICT, "Lote já possui reserva ativa") from error
+    db.refresh(lot)
+    return lot
+
+
+def review(db: Session, lot_id: uuid.UUID, payload: ReviewCreate, principal: AuthenticatedPrincipal) -> Lot:
+    _require(principal, OrganizationRole.REVISOR_AUTORIZADO)
+    lot = read(db, lot_id, principal, lock=True)
+    if lot.status != LotStatus.PENDENTE_REVISAO:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Apenas lotes pendentes podem ser revisados")
+    if payload.decision == ReviewDecision.APROVADO:
+        assert_not_expired(lot)
+        institution = db.get(Institution, payload.institution_id)
+        if not institution or institution.organization_id != principal.organization_id:
+            raise HTTPException(status.HTTP_404_NOT_FOUND, "Instituição não encontrada neste escopo")
+        accepted = set(institution.accepted_conservation.split(","))
+        if lot.conservation.value not in accepted or lot.quantity_kg > institution.capacity_kg:
+            raise HTTPException(status.HTTP_409_CONFLICT, "Instituição incompatível com o lote")
+        lot.status, lot.institution_id = LotStatus.LIBERADO, institution.id
+        action = "Revisão humana registrada: aprovada"
+    else:
+        lot.status, lot.reason = LotStatus.REJEITADO, payload.reason.strip() if payload.reason else None
+        action = "Revisão humana registrada: rejeitada"
+    db.add(SanitaryReview(lot_id=lot.id, reviewer_id=principal.user_id, decision=payload.decision, reason=payload.reason, human_authorized=True, is_simulation=False))
+    _event(db, lot, principal, action, "Registro do sistema; não é atestado legal ou sanitário.")
+    db.commit()
     db.refresh(lot)
     return lot

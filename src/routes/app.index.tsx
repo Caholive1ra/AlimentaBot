@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import {
   ArrowRight,
   CheckCircle2,
@@ -18,14 +19,31 @@ import { MetricCard, PageHeader, Panel, StatusBadge } from "@/components/app/ui-
 import { fmtData, fmtKg } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 
+const profileRoutes = {
+  doador: "/app/doador",
+  gestor: "/app/gestor",
+  operador: "/app/operador",
+  transportador: "/app/transportador",
+  instituicao: "/app/instituicao",
+} as const;
+type DemoProfile = keyof typeof profileRoutes;
+
+function isDemoProfile(value: unknown): value is DemoProfile {
+  return typeof value === "string" && value in profileRoutes;
+}
+
 export const Route = createFileRoute("/app/")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    perfil: isDemoProfile(search["perfil"]) ? search["perfil"] : undefined,
+  }),
   head: () => ({ meta: [{ title: "Visão geral — AlimentaBot (demo)" }] }),
   component: Overview,
 });
 
 const papeis = [
   { to: "/app/doador", t: "Doador", d: "Publica excedentes seguros", icon: Store },
-  { to: "/app/gestor", t: "Gestor / Operador", d: "Revisa e libera lotes", icon: ShieldCheck },
+  { to: "/app/gestor", t: "Gestor", d: "Revisa e libera lotes", icon: ShieldCheck },
+  { to: "/app/operador", t: "Operador", d: "Coordena destinos e transporte", icon: ClipboardCheck },
   { to: "/app/transportador", t: "Transportador", d: "Aceita e coleta entregas", icon: Truck },
   {
     to: "/app/instituicao",
@@ -37,7 +55,13 @@ const papeis = [
 
 function Overview() {
   const s = useDemo();
+  const { perfil } = Route.useSearch();
+  const navigate = useNavigate();
   const m = metricas(s);
+  useEffect(() => {
+    if (perfil) void navigate({ to: profileRoutes[perfil], replace: true });
+  }, [navigate, perfil]);
+
   const criados = s.eventos.filter(
     (e) => e.acao.startsWith("Lote publicado") && !["LT-1001", "LT-1002"].includes(e.loteId),
   );
@@ -87,7 +111,6 @@ function Overview() {
           hint={`${m.entregues} entregas sintéticas`}
         />
       </div>
-
       <div className="mt-6 grid gap-6 lg:grid-cols-5">
         <Panel
           className="lg:col-span-3 overflow-hidden"
@@ -132,9 +155,8 @@ function Overview() {
           </ul>
         </Panel>
       </div>
-
       <h2 className="mb-3 mt-8 text-lg font-semibold">Entrar como</h2>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {papeis.map((p) => (
           <Link
             key={p.to}
@@ -149,7 +171,6 @@ function Overview() {
           </Link>
         ))}
       </div>
-
       <Panel
         className="mt-6"
         title="Últimos lotes"

@@ -159,7 +159,7 @@ export function DemoChip({ className }: { className?: string }) {
       )}
     >
       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-warning" />
-      DEMONSTRAÇÃO • DADOS SINTÉTICOS
+      DEMONSTRAÇÃO ACADÊMICA · DADOS FICTÍCIOS
     </span>
   );
 }

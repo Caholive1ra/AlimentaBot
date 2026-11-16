@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import {
   Bell,
+  ClipboardCheck,
   ChartNoAxesCombined,
   HandHeart,
   LayoutDashboard,
@@ -52,7 +53,8 @@ export const Route = createFileRoute("/app")({
 const nav = [
   { to: "/app", label: "Visão geral", icon: LayoutDashboard },
   { to: "/app/doador", label: "Doador", icon: Store },
-  { to: "/app/gestor", label: "Gestor / Operador", icon: ShieldCheck },
+  { to: "/app/gestor", label: "Gestor", icon: ShieldCheck },
+  { to: "/app/operador", label: "Operador", icon: ClipboardCheck },
   { to: "/app/transportador", label: "Transportador", icon: Truck },
   { to: "/app/instituicao", label: "Instituição", icon: HandHeart },
   { to: "/app/simulador", label: "Simulador de matching", icon: ChartNoAxesCombined },
@@ -112,6 +114,14 @@ function AppLayout() {
             <div className="min-w-0 flex-1">
               <p className="truncate font-display text-sm font-semibold">{atual}</p>
             </div>
+            {path !== "/app" && (
+              <Button variant="outline" size="sm" asChild className="inline-flex">
+                <Link to="/experiencia">
+                  <LayoutDashboard />
+                  Voltar à experiência
+                </Link>
+              </Button>
+            )}
             <DemoChip className="hidden sm:inline-flex" />
             <Popover>
               <PopoverTrigger asChild>
@@ -142,6 +152,10 @@ function AppLayout() {
           <div className="px-4 pt-3 sm:hidden">
             <DemoChip />
           </div>
+          <p className="mx-4 mt-3 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 text-center text-xs font-semibold text-warning-foreground md:mx-8">
+            DEMONSTRAÇÃO ACADÊMICA&nbsp; DADOS FICTÍCIOS. As permissões deste ambiente são
+            ilustrativas e não concedem acesso ao sistema operacional.
+          </p>
           <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:px-8 md:py-8">
             <Outlet />
           </div>

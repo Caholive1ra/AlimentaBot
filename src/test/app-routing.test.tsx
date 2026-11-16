@@ -9,9 +9,12 @@ import { routeTree } from "@/routeTree.gen";
 describe("App routing", () => {
   it.each([
     "/",
+    "/experiencia",
+    "/cadastro",
     "/app",
     "/app/doador",
     "/app/gestor",
+    "/app/operador",
     "/app/transportador",
     "/app/instituicao",
     "/app/simulador",

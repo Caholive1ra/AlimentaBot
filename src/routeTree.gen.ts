@@ -11,10 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as CadastroRouteImport } from './routes/cadastro'
+import { Route as ExperienciaRouteImport } from './routes/experiencia'
+import { Route as OperacionalRouteImport } from './routes/operacional'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppDoadorRouteImport } from './routes/app.doador'
 import { Route as AppGestorRouteImport } from './routes/app.gestor'
 import { Route as AppInstituicaoRouteImport } from './routes/app.instituicao'
+import { Route as AppOperadorRouteImport } from './routes/app.operador'
 import { Route as AppSimuladorRouteImport } from './routes/app.simulador'
 import { Route as AppTransportadorRouteImport } from './routes/app.transportador'
 
@@ -26,6 +30,21 @@ const IndexRoute = IndexRouteImport.update({
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroRoute = CadastroRouteImport.update({
+  id: '/cadastro',
+  path: '/cadastro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExperienciaRoute = ExperienciaRouteImport.update({
+  id: '/experiencia',
+  path: '/experiencia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OperacionalRoute = OperacionalRouteImport.update({
+  id: '/operacional',
+  path: '/operacional',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -48,6 +67,11 @@ const AppInstituicaoRoute = AppInstituicaoRouteImport.update({
   path: '/instituicao',
   getParentRoute: () => AppRoute,
 } as any)
+const AppOperadorRoute = AppOperadorRouteImport.update({
+  id: '/operador',
+  path: '/operador',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSimuladorRoute = AppSimuladorRouteImport.update({
   id: '/simulador',
   path: '/simulador',
@@ -62,18 +86,26 @@ const AppTransportadorRoute = AppTransportadorRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/cadastro': typeof CadastroRoute
+  '/experiencia': typeof ExperienciaRoute
+  '/operacional': typeof OperacionalRoute
   '/app/doador': typeof AppDoadorRoute
   '/app/gestor': typeof AppGestorRoute
   '/app/instituicao': typeof AppInstituicaoRoute
+  '/app/operador': typeof AppOperadorRoute
   '/app/simulador': typeof AppSimuladorRoute
   '/app/transportador': typeof AppTransportadorRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cadastro': typeof CadastroRoute
+  '/experiencia': typeof ExperienciaRoute
+  '/operacional': typeof OperacionalRoute
   '/app/doador': typeof AppDoadorRoute
   '/app/gestor': typeof AppGestorRoute
   '/app/instituicao': typeof AppInstituicaoRoute
+  '/app/operador': typeof AppOperadorRoute
   '/app/simulador': typeof AppSimuladorRoute
   '/app/transportador': typeof AppTransportadorRoute
   '/app': typeof AppIndexRoute
@@ -82,9 +114,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/cadastro': typeof CadastroRoute
+  '/experiencia': typeof ExperienciaRoute
+  '/operacional': typeof OperacionalRoute
   '/app/doador': typeof AppDoadorRoute
   '/app/gestor': typeof AppGestorRoute
   '/app/instituicao': typeof AppInstituicaoRoute
+  '/app/operador': typeof AppOperadorRoute
   '/app/simulador': typeof AppSimuladorRoute
   '/app/transportador': typeof AppTransportadorRoute
   '/app/': typeof AppIndexRoute
@@ -94,18 +130,26 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/cadastro'
+    | '/experiencia'
+    | '/operacional'
     | '/app/doador'
     | '/app/gestor'
     | '/app/instituicao'
+    | '/app/operador'
     | '/app/simulador'
     | '/app/transportador'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/cadastro'
+    | '/experiencia'
+    | '/operacional'
     | '/app/doador'
     | '/app/gestor'
     | '/app/instituicao'
+    | '/app/operador'
     | '/app/simulador'
     | '/app/transportador'
     | '/app'
@@ -113,9 +157,13 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/cadastro'
+    | '/experiencia'
+    | '/operacional'
     | '/app/doador'
     | '/app/gestor'
     | '/app/instituicao'
+    | '/app/operador'
     | '/app/simulador'
     | '/app/transportador'
     | '/app/'
@@ -124,6 +172,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  CadastroRoute: typeof CadastroRoute
+  ExperienciaRoute: typeof ExperienciaRoute
+  OperacionalRoute: typeof OperacionalRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -140,6 +191,27 @@ declare module '@tanstack/react-router' {
       path: '/app'
       fullPath: '/app'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro': {
+      id: '/cadastro'
+      path: '/cadastro'
+      fullPath: '/cadastro'
+      preLoaderRoute: typeof CadastroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/experiencia': {
+      id: '/experiencia'
+      path: '/experiencia'
+      fullPath: '/experiencia'
+      preLoaderRoute: typeof ExperienciaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/operacional': {
+      id: '/operacional'
+      path: '/operacional'
+      fullPath: '/operacional'
+      preLoaderRoute: typeof OperacionalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/': {
@@ -170,6 +242,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInstituicaoRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/operador': {
+      id: '/app/operador'
+      path: '/operador'
+      fullPath: '/app/operador'
+      preLoaderRoute: typeof AppOperadorRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/simulador': {
       id: '/app/simulador'
       path: '/simulador'
@@ -191,6 +270,7 @@ interface AppRouteChildren {
   AppDoadorRoute: typeof AppDoadorRoute
   AppGestorRoute: typeof AppGestorRoute
   AppInstituicaoRoute: typeof AppInstituicaoRoute
+  AppOperadorRoute: typeof AppOperadorRoute
   AppSimuladorRoute: typeof AppSimuladorRoute
   AppTransportadorRoute: typeof AppTransportadorRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -200,6 +280,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDoadorRoute: AppDoadorRoute,
   AppGestorRoute: AppGestorRoute,
   AppInstituicaoRoute: AppInstituicaoRoute,
+  AppOperadorRoute: AppOperadorRoute,
   AppSimuladorRoute: AppSimuladorRoute,
   AppTransportadorRoute: AppTransportadorRoute,
   AppIndexRoute: AppIndexRoute,
@@ -210,6 +291,9 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  CadastroRoute: CadastroRoute,
+  ExperienciaRoute: ExperienciaRoute,
+  OperacionalRoute: OperacionalRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
