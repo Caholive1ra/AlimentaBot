@@ -10,33 +10,120 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppDoadorRouteImport } from './routes/app.doador'
+import { Route as AppGestorRouteImport } from './routes/app.gestor'
+import { Route as AppInstituicaoRouteImport } from './routes/app.instituicao'
+import { Route as AppSimuladorRouteImport } from './routes/app.simulador'
+import { Route as AppTransportadorRouteImport } from './routes/app.transportador'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDoadorRoute = AppDoadorRouteImport.update({
+  id: '/doador',
+  path: '/doador',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGestorRoute = AppGestorRouteImport.update({
+  id: '/gestor',
+  path: '/gestor',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInstituicaoRoute = AppInstituicaoRouteImport.update({
+  id: '/instituicao',
+  path: '/instituicao',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSimuladorRoute = AppSimuladorRouteImport.update({
+  id: '/simulador',
+  path: '/simulador',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTransportadorRoute = AppTransportadorRouteImport.update({
+  id: '/transportador',
+  path: '/transportador',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/app/doador': typeof AppDoadorRoute
+  '/app/gestor': typeof AppGestorRoute
+  '/app/instituicao': typeof AppInstituicaoRoute
+  '/app/simulador': typeof AppSimuladorRoute
+  '/app/transportador': typeof AppTransportadorRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app/doador': typeof AppDoadorRoute
+  '/app/gestor': typeof AppGestorRoute
+  '/app/instituicao': typeof AppInstituicaoRoute
+  '/app/simulador': typeof AppSimuladorRoute
+  '/app/transportador': typeof AppTransportadorRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/app/doador': typeof AppDoadorRoute
+  '/app/gestor': typeof AppGestorRoute
+  '/app/instituicao': typeof AppInstituicaoRoute
+  '/app/simulador': typeof AppSimuladorRoute
+  '/app/transportador': typeof AppTransportadorRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/app/doador'
+    | '/app/gestor'
+    | '/app/instituicao'
+    | '/app/simulador'
+    | '/app/transportador'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/app/doador'
+    | '/app/gestor'
+    | '/app/instituicao'
+    | '/app/simulador'
+    | '/app/transportador'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/app/doador'
+    | '/app/gestor'
+    | '/app/instituicao'
+    | '/app/simulador'
+    | '/app/transportador'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +135,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/doador': {
+      id: '/app/doador'
+      path: '/doador'
+      fullPath: '/app/doador'
+      preLoaderRoute: typeof AppDoadorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/gestor': {
+      id: '/app/gestor'
+      path: '/gestor'
+      fullPath: '/app/gestor'
+      preLoaderRoute: typeof AppGestorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/instituicao': {
+      id: '/app/instituicao'
+      path: '/instituicao'
+      fullPath: '/app/instituicao'
+      preLoaderRoute: typeof AppInstituicaoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/simulador': {
+      id: '/app/simulador'
+      path: '/simulador'
+      fullPath: '/app/simulador'
+      preLoaderRoute: typeof AppSimuladorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/transportador': {
+      id: '/app/transportador'
+      path: '/transportador'
+      fullPath: '/app/transportador'
+      preLoaderRoute: typeof AppTransportadorRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppDoadorRoute: typeof AppDoadorRoute
+  AppGestorRoute: typeof AppGestorRoute
+  AppInstituicaoRoute: typeof AppInstituicaoRoute
+  AppSimuladorRoute: typeof AppSimuladorRoute
+  AppTransportadorRoute: typeof AppTransportadorRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDoadorRoute: AppDoadorRoute,
+  AppGestorRoute: AppGestorRoute,
+  AppInstituicaoRoute: AppInstituicaoRoute,
+  AppSimuladorRoute: AppSimuladorRoute,
+  AppTransportadorRoute: AppTransportadorRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

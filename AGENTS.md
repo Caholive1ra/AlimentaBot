@@ -28,3 +28,7 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Domain logic lives in pure functions in `src/lib/domain/rules.ts`; UI calls only `api` from `src/services/api.ts` — so a future HTTP adapter can replace the mock without touching pages.
+- Demo state is per-visitor localStorage (`src/services/store.ts`) read via `useSyncExternalStore`; `/app` routes use `ssr: false` to avoid hydration mismatches with locally stored data.
