@@ -22,12 +22,14 @@ bearer_scheme = HTTPBearer(auto_error=False)
 
 
 def get_authenticated_principal(
-    organization_id: uuid.UUID = Header(alias="X-Organization-Id"),
+    organization_id: uuid.UUID | None = Header(default=None, alias="X-Organization-Id"),
     credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
     db: Session = Depends(get_db),
 ) -> AuthenticatedPrincipal:
     if not credentials or credentials.scheme.lower() != "bearer":
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Bearer token é obrigatório")
+    if organization_id is None:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Organization scope is required")
     return resolve_principal(db, validate_access_token(credentials.credentials), organization_id)
 
 

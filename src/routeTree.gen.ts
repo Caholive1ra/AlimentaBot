@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as OperacionalRouteImport } from './routes/operacional'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppDoadorRouteImport } from './routes/app.doador'
 import { Route as AppGestorRouteImport } from './routes/app.gestor'
@@ -26,6 +27,11 @@ const IndexRoute = IndexRouteImport.update({
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OperacionalRoute = OperacionalRouteImport.update({
+  id: '/operacional',
+  path: '/operacional',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -62,6 +68,7 @@ const AppTransportadorRoute = AppTransportadorRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/operacional': typeof OperacionalRoute
   '/app/doador': typeof AppDoadorRoute
   '/app/gestor': typeof AppGestorRoute
   '/app/instituicao': typeof AppInstituicaoRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/operacional': typeof OperacionalRoute
   '/app/doador': typeof AppDoadorRoute
   '/app/gestor': typeof AppGestorRoute
   '/app/instituicao': typeof AppInstituicaoRoute
@@ -82,6 +90,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/operacional': typeof OperacionalRoute
   '/app/doador': typeof AppDoadorRoute
   '/app/gestor': typeof AppGestorRoute
   '/app/instituicao': typeof AppInstituicaoRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/operacional'
     | '/app/doador'
     | '/app/gestor'
     | '/app/instituicao'
@@ -103,6 +113,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/operacional'
     | '/app/doador'
     | '/app/gestor'
     | '/app/instituicao'
@@ -113,6 +124,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/operacional'
     | '/app/doador'
     | '/app/gestor'
     | '/app/instituicao'
@@ -124,6 +136,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  OperacionalRoute: typeof OperacionalRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -140,6 +153,13 @@ declare module '@tanstack/react-router' {
       path: '/app'
       fullPath: '/app'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/operacional': {
+      id: '/operacional'
+      path: '/operacional'
+      fullPath: '/operacional'
+      preLoaderRoute: typeof OperacionalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/': {
@@ -210,6 +230,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  OperacionalRoute: OperacionalRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
