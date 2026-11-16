@@ -108,4 +108,3 @@ def revoke_membership(db: Session, principal: AuthenticatedPrincipal, user_id: u
     membership.active = False
     _audit(db, principal.user_id, user_id, principal.organization_id, "ACESSO_REVOGADO", role.value)
     db.commit()
-
