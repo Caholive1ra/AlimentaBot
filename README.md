@@ -1,4 +1,4 @@
-<img width="800" height="500" alt="AlimentaBot_ Robô Nutritivo" src="https://github.com/user-attachments/assets/94c9b591-1115-47e4-825d-0be488765fea" />
+<img width="700" height="500" alt="AlimentaBot_ Robô Nutritivo" src="https://github.com/user-attachments/assets/94c9b591-1115-47e4-825d-0be488765fea" />
 
 # AlimentaBot
 
