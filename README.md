@@ -1,60 +1,290 @@
-# Surplus To Smiles Network
+# AlimentaBot
 
-Crie do zero um aplicativo WEB React TypeScript chamado AlimentaBot para FIAP Global Solution 2026, SEM backend real, pronto para banca. A prioridade absoluta é build sem erros, rotas funcionando e frontend de produto SaaS de verdade (não apresentação em site). Todo conteúdo em português brasileiro. O app não precisa de login e todos os dados são DEMONSTRATIVOS locais por visitante, persistidos em localStorage e reiniciáveis; nenhum dado real de beneficiários. Não usar Supabase, nem serviços externos que exijam credenciais.
+> **Alimento bom não deveria virar desperdício.**
 
-Separar em dois ambientes com design premium FoodTech, consistente com a marca AlimentaBot: off-white #F7F9F4, verde-floresta #153D32, verde-lima #A7D63D, esmeralda #168B62, grafite #202B27, tipografia Sora/Inter, curvas orgânicas, muita legibilidade, imagens de alimentos na landing, ícones lucide, layout responsivo e acessível. Marca com logo-conceito robô simpático + bowl de comida + rota.
+O AlimentaBot é um projeto acadêmico da **FIAP Global Solution 2026** que demonstra como excedentes alimentares seguros podem ser organizados entre doadores, transportadores e instituições. A experiência pública executa um fluxo completo com dados sintéticos; o repositório também traz uma API FastAPI e a base PostgreSQL para uma evolução controlada do produto.
 
-AMBIENTE 1: Landing comercial em /, com hero 'Alimento bom não deveria virar desperdício.', subtítulo sobre ligar excedentes seguros a pessoas/instituições, CTAs 'Acessar plataforma' levando a /app e 'Como funciona' levando à seção. Seções: problema/oportunidade, quatro etapas publicar > revisão humana > matching/retirada > recebimento, público-alvo, valor proposto, tecnologia, dúvidas, chamada final e equipe Carolina Feitosa RM 563049 e Guilherme Machado RM 564658. Não inventar depoimentos, parceiros, clientes, testes de campo, números de impacto. Robôs e smart lockers são apenas visão futura condicionada a licenças e segurança.
+> [!IMPORTANT]
+> Este é um projeto demonstrativo: não opera doações reais, não coleta dados de beneficiários e não substitui inspeção, certificação ou decisão sanitária de profissional legalmente habilitado.
 
-AMBIENTE 2: MVP FRONTEND em /app com sidebar de SaaS no desktop, drawer no mobile, header e métricas ilustrativas; /app/doador, /app/transportador, /app/instituicao, /app/gestor, /app/simulador. Navegação por quatro papéis sem autenticação para banca, mostrar chip 'DEMONSTRAÇÃO • DADOS SINTÉTICOS'. O frontend deve parecer um sistema real e não slides.
+## Índice
 
-DOADOR: painel de lotes fictícios, filtros e busca, formulário para cadastrar excedente (item/categoria, kg/quantidade, conservação, preparação e validade, janela segura de coleta, origem fictícia, observações) com validações. Novo lote sempre PENDENTE DE REVISÃO, nunca liberado automaticamente. Tabela e cartões profissionais, detalhes do lote, toasts.
+- [Visão do produto](#visão-do-produto)
+- [Status e limites](#status-e-limites)
+- [Funcionalidades](#funcionalidades)
+- [Arquitetura](#arquitetura)
+- [Tecnologias](#tecnologias)
+- [Início rápido](#início-rápido)
+- [Configuração](#configuração)
+- [API e autenticação](#api-e-autenticação)
+- [Qualidade e testes](#qualidade-e-testes)
+- [Deploy](#deploy)
+- [Documentação](#documentação)
+- [Contribuição](#contribuição)
 
-GESTOR/OPERADOR DEMO: painel de métricas calculadas do estado demonstrativo, gestão do ciclo e revisão sanitária puramente HIPOTÉTICA para simulação (sem atestado verdadeiro), aprovar/rejeitar para teste. Histórico de custódia fictício auditável, atividades, notificações e botão Reiniciar demonstração.
+## Visão do produto
 
-TRANSPORTADOR: oportunidades liberadas, requisitos de conservação e capacidade, escolher/aceitar entrega e registrar coleta; bloquear reserva duplicada e etapa fora de ordem. Distâncias hipotéticas, não GPS real.
+O desperdício de alimentos também é um problema de coordenação: é preciso saber se o lote ainda é válido, como foi conservado, quem pode buscá-lo e qual destino tem capacidade para recebê-lo. O AlimentaBot organiza esse fluxo em etapas rastreáveis:
 
-INSTITUIÇÃO: painel de lotes destinados à instituição fictícia, capacidade e janela, conferir e confirmar/recusar recebimento; sincronizar alterações com outros painéis em estado local.
+```text
+Doador publica → revisão humana autorizada → reserva e coleta → conferência no destino
+```
 
-SIMULADOR: explicação do matching e comparação de pesquisa SIMULADA 24 lotes, 16 motoristas, 8 destinos; baseline sequencial 14 entregas/79kg/48,08km de desvio, otimização 15 entregas/98kg/41,43km. Comparação visual com gráficos e ressalva de que são números acadêmicos sintéticos, não resultado operacional nem execução de IA real. Validade, conservação, capacidade e janela + revisão humana são bloqueios antes da sugestão.
+O matching é apenas uma **sugestão simulada**. Antes dela, o sistema considera validade, conservação, capacidade e janela de coleta. A decisão de liberar um lote permanece humana e registrada.
 
-Fluxo demo ponta a ponta operacional no mesmo navegador: cadastrar lote > validar hipoteticamente como gestor > encontrar oportunidade > motorista aceita e coleta > instituição confirma recebimento > indicadores e histórico reativos. Opcional tour guiado 'Experimente em 3 minutos'. Dados independentes entre visitantes. Não implementa pagamento, recompensas por entrega, patrocínio inventado ou parceria real.
+## Status e limites
 
-Arquitetura pronta para posterior integração via API REST com Python/FastAPI/PostgreSQL a ser desenvolvida pelo usuário na IDE: separar camada de serviços mock, models/interfaces TS, armazenamento e componentes; documentação curta de como substituir mock adapter por fetch. Evitar qualquer alegação de backend já feito. Usar React, TypeScript, Tailwind e componentes com design consistente.
+| Área | Estado atual |
+| --- | --- |
+| Landing e demonstração | Prontas para navegação, responsivas e em português brasileiro. |
+| Fluxo demonstrativo | Funcional no mesmo navegador, usando somente estado sintético no `localStorage`. |
+| Backend | API FastAPI com PostgreSQL, migrations, testes, JWT/Auth0 e rotas operacionais em evolução. |
+| Integração padrão da interface | Mantém o adaptador mock; a UI principal não aponta para a API automaticamente. |
+| Produção | Bloqueada até validações de infraestrutura, segurança, LGPD e operação descritas em [Produção](docs/PRODUCAO.md). |
 
-CRITÉRIOS DE ACEITE: validar build, evitar referências a arquivos ou imports que não existem, testar /, /app, as quatro rotas de papel e simulador. Priorizar execução funcional de uma versão enxuta sobre uma grande com build quebrado. Se algo não ficar pronto, avisar exatamente o que falta. O projeto deve ser publicável e navegável sem login.
+Não fazem parte do MVP: pagamentos, recompensas, patrocínios, GPS real, parceiros/clientes reais, decisões sanitárias automáticas, IA que altere status de lotes, robôs ou smart lockers operacionais.
 
-This project was built with [Lovable](https://lovable.dev).
+## Funcionalidades
 
-## Build with Lovable
+### Experiência pública
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/a0a8c24d-1a49-42fb-858d-b91ab83d6e31).
+- Landing page em `/` com proposta, fluxo, público-alvo, tecnologia, FAQ e equipe.
+- Experiência guiada em `/experiencia`, com narrativa do fluxo demonstrativo.
+- Cadastro público em `/cadastro` e entrada operacional em `/operacional` quando o ambiente conectado estiver configurado.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+### Plataforma demonstrativa
 
-## Development
+As rotas `/app/*` não exigem login e exibem o chip de demonstração. Cada visitante possui um estado local independente e pode reiniciá-lo.
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+| Papel/rota | O que demonstra |
+| --- | --- |
+| `/app/doador` | Cadastro de excedente, filtros, consulta e validações de lote. |
+| `/app/gestor` | Revisão humana hipotética, aprovação/rejeição e escolha de instituição compatível. |
+| `/app/operador` | Indicadores, atividades, notificações e reinício da demo. |
+| `/app/transportador` | Oportunidades, compatibilidade, reserva única e registro de coleta. |
+| `/app/instituicao` | Capacidade, lotes destinados e confirmação ou recusa do recebimento. |
+| `/app/simulador` | Comparação acadêmica e sintética de cenários de matching. |
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+### Regras do domínio
+
+As regras puras estão em [`src/lib/domain/rules.ts`](src/lib/domain/rules.ts) e são cobertas por testes.
+
+- Novo lote inicia como `PENDENTE_REVISAO`.
+- Item, peso, validade, preparação, janela e conservação são validados.
+- Refeições prontas não podem ser cadastradas em temperatura ambiente.
+- Instituição precisa aceitar a conservação e ter capacidade disponível.
+- Transportador precisa comportar o peso e oferecer refrigeração quando necessária.
+- Há uma única reserva por lote e as transições ocorrem em ordem.
+- Eventos de custódia e notificações são criados a cada etapa.
+
+```text
+PENDENTE_REVISAO → LIBERADO → RESERVADO → COLETADO → ENTREGUE
+       └────────→ REJEITADO                  └──────→ RECUSADO
+```
+
+## Arquitetura
+
+```text
+src/
+├── routes/                 # Rotas file-based do TanStack Start
+├── components/             # Landing, experiência e painéis por papel
+├── lib/domain/             # Modelos e regras de negócio puras
+├── services/
+│   ├── api.ts              # Contrato AlimentaApi e adaptador mock ativo
+│   ├── store.ts            # Estado local sintético por visitante
+│   └── http.ts             # Cliente experimental para endpoints operacionais
+└── auth/                   # Auth0 SPA; tokens somente em memória
+
+backend/
+├── app/api/routes/         # Health, identidade, acesso, demo, lotes e operações
+├── app/services/           # Casos de uso e autorização contextual
+├── app/repositories/       # Consultas por organização
+├── app/models.py           # Modelos SQLAlchemy
+├── alembic/                # Histórico de migrations PostgreSQL
+└── tests/                  # Testes de API, autorização e regras operacionais
+```
+
+A interface depende somente da abstração `AlimentaApi`. Isso preserva o fluxo de demonstração e permite a futura troca por um adaptador HTTP sem reescrever as páginas. O servidor, quando usado, é a fonte de verdade: as regras precisam ser revalidadas nele.
+
+## Tecnologias
+
+| Camada | Principais tecnologias |
+| --- | --- |
+| Frontend | React 19, TypeScript, TanStack Start/Router, Vite, Tailwind CSS e Radix UI |
+| Formulários e gráficos | React Hook Form, Zod, Recharts e Sonner |
+| Testes frontend | Vitest e Testing Library |
+| Backend | Python 3.11+, FastAPI, SQLAlchemy 2 e Pydantic Settings |
+| Banco e migrations | PostgreSQL 16, Psycopg e Alembic |
+| Identidade conectada | Auth0/OIDC com Authorization Code Flow + PKCE |
+| Ambiente local | Docker Compose (web, API, banco de desenvolvimento e banco de testes) |
+
+## Início rápido
+
+### Pré-requisitos
+
+- Node.js 22+ e npm;
+- para o backend: Python 3.11+ e PostgreSQL 16+, ou Docker Desktop;
+- Git.
+
+### Frontend demonstrativo
+
+```powershell
+git clone <url-do-repositorio>
+cd AlimentaBot
+npm ci
+Copy-Item .env.example .env.local
 npm run dev
 ```
 
-## Operação e produção
+Abra `http://localhost:5173`. O padrão é `VITE_DATA_MODE=demo`, portanto não são necessárias credenciais para conhecer a plataforma.
 
-O projeto possui ambientes locais separados para demo, API e PostgreSQL. Consulte
-[`docs/PRODUCAO.md`](docs/PRODUCAO.md) antes de configurar Render ou Vercel: o backend
-tem definição de serviço em `render.yaml`, mas o frontend ainda usa preset Nitro para
-Cloudflare e não deve ser publicado na Vercel até que esse preset/roteamento seja
-validado. Nunca versione `.env`, tokens Auth0 ou URLs de banco.
+### Backend local
 
-## Histórico e contribuição
+Crie `backend/.env` a partir do exemplo e mantenha somente dados sintéticos no ambiente local.
 
-Os marcos publicados estão em [CHANGELOG.md](CHANGELOG.md). Consulte
-[`docs/CONTRIBUINDO.md`](docs/CONTRIBUINDO.md) para a convenção de commits e as regras
-de histórico compatíveis com a integração Lovable.
+```powershell
+cd backend
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -e ".[dev]"
+Copy-Item .env.example .env
+alembic upgrade head
+uvicorn app.main:app --reload --port 8000
+```
+
+A API fica em `http://localhost:8000`, com documentação interativa em `/docs`, health check em `/health` e readiness com banco em `/ready`.
+
+### Tudo com Docker
+
+Na raiz do repositório:
+
+```powershell
+docker compose up --build
+```
+
+| Serviço | Endereço/porta | Finalidade |
+| --- | --- | --- |
+| `web` | `http://localhost:5173` | Frontend Vite. |
+| `api` | `http://localhost:8000` | FastAPI com migrations locais aplicadas. |
+| `db` | `localhost:5432` | PostgreSQL de desenvolvimento. |
+| `db_test` | `localhost:5433` | PostgreSQL isolado para testes. |
+
+## Configuração
+
+### Frontend
+
+Copie `.env.example` para `.env.local`. Nunca inclua segredos em variáveis `VITE_*`, pois elas são expostas no bundle do navegador.
+
+| Variável | Uso |
+| --- | --- |
+| `VITE_DATA_MODE` | `demo` mantém a experiência local; `connected` habilita a autenticação operacional se todas as variáveis Auth0 estiverem preenchidas. |
+| `VITE_API_BASE_URL` | Base da API, por exemplo `http://localhost:8000/api/v1`. |
+| `VITE_AUTH0_DOMAIN` | Domínio público do tenant Auth0, sem `https://`. |
+| `VITE_AUTH0_CLIENT_ID` | Client ID público da SPA Auth0. |
+| `VITE_AUTH0_AUDIENCE` | Identifier/audience da API Auth0. |
+
+### Backend
+
+Copie `backend/.env.example` para `backend/.env`. Não versione esse arquivo.
+
+| Variável | Uso |
+| --- | --- |
+| `DATABASE_URL` | Conexão PostgreSQL da aplicação. |
+| `TEST_DATABASE_URL` | Conexão do banco de testes local. |
+| `CORS_ORIGINS` | Origens explícitas, separadas por vírgula. |
+| `AUTH0_DOMAIN` / `AUTH0_AUDIENCE` | Validação de access tokens JWT do Auth0. |
+| `DEMO_MODE_ENABLED` | Somente em ambiente demonstrativo local; deve ser `false` em produção. |
+| `DB_POOL_SIZE` / `DB_MAX_OVERFLOW` | Ajustes do pool de conexões. |
+| `MAX_REQUEST_BODY_BYTES` | Limite de corpo HTTP; padrão de 1 MiB. |
+
+## API e autenticação
+
+Há dois conjuntos de rotas no backend:
+
+| Conjunto | Finalidade | Autorização |
+| --- | --- | --- |
+| `/api/v1/demo/*` e `/api/v1/lotes/*` | Recursos sintéticos para desenvolvimento e demonstração da API. | Cabeçalhos `X-Demo-*` somente em modo demo; não são autenticação de produção. |
+| `/api/v1/operational/*`, `/api/v1/me` e `/api/v1/access/*` | Base conectada: organizações, perfis, lotes, revisões, reservas, convites e solicitações. | Bearer JWT Auth0 + organização e papel validados no servidor. |
+
+Endpoints de interesse:
+
+- `GET /health` e `GET /ready`;
+- `GET /api/v1/me` para contexto das organizações autorizadas;
+- `POST /api/v1/access/registration-requests`, `POST /invitations` e `POST /invitations/accept`;
+- `GET|POST|PATCH /api/v1/operational/lots`;
+- `POST /api/v1/operational/lots/{id}/reviews` e `/reservations`;
+- `GET|POST /api/v1/lotes`, com revisão, reserva, coleta, entrega e histórico de custódia demonstrativos;
+- `POST /api/v1/demo/sessions`, `GET /state` e `POST /reset`.
+
+No modo conectado, o frontend usa `@auth0/auth0-react`. O access token permanece em memória; o ID Token não é enviado à API. O servidor verifica assinatura, emissor, audience e expiração, e só então resolve o escopo pela associação persistida de usuário, organização e papel.
+
+Consulte [a configuração Auth0 da SPA](docs/AUTH0_SPA.md), [o guia Auth0 do backend](backend/docs/AUTH0.md) e [o contrato REST](backend/docs/API_REST.md) antes de integrar ambientes reais.
+
+## Qualidade e testes
+
+Execute, na raiz:
+
+```powershell
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
+
+Para o backend:
+
+```powershell
+cd backend
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+Os testes frontend cobrem regras de domínio, estado operacional e rotas/experiência. Os testes backend cobrem health, sessão demo, lotes, fluxo operacional, JWT, identidade, controle de acesso e isolamento entre organizações.
+
+## Segurança, privacidade e operação responsável
+
+- Use exclusivamente dados sintéticos no MVP e nos ambientes de demonstração.
+- Não cadastre beneficiários: a necessidade é representada por instituição e capacidade agregada.
+- Não armazene senhas, tokens, `DATABASE_URL`, chaves privadas ou segredo Auth0 no repositório ou bundle.
+- A revisão sanitária é uma decisão humana autorizada; seu registro é operacional, não um certificado sanitário legal.
+- Eventos relevantes de custódia devem permanecer append-only; não use o cliente como fronteira de segurança.
+- Para produção, implemente autorização por organização no servidor, CORS explícito, limites, observabilidade com redação de dados e política de retenção revisada.
+
+A proposta técnica de minimização e retenção está em [Retenção de dados](backend/docs/RETENCAO_DADOS.md).
+
+## Deploy
+
+O repositório contém uma definição de API/PostgreSQL para Render em [`render.yaml`](render.yaml). O frontend atual gera um bundle Nitro configurado para Cloudflare; **não publique em Vercel** antes de validar o preset/roteamento ou uma conversão para SPA estática.
+
+Antes de qualquer publicação, siga o [guia de produção](docs/PRODUCAO.md). Ele descreve variáveis, migrations revisadas, CORS, health checks, backup/restore e os bloqueios atuais. Migrations não devem ser executadas automaticamente no start de produção, nem sofrer downgrade destrutivo em bancos compartilhados.
+
+## Documentação
+
+| Documento | Conteúdo |
+| --- | --- |
+| [Arquitetura PostgreSQL](docs/ARQUITETURA_BACKEND_POSTGRESQL.md) | Decisões de persistência, domínio, autorização e plano incremental. |
+| [Integração com API](docs/INTEGRACAO_API.md) | Evolução da interface mock para adaptador HTTP. |
+| [Produção](docs/PRODUCAO.md) | Estratégia de deploy, variáveis e bloqueios. |
+| [Auth0 SPA](docs/AUTH0_SPA.md) | Configuração da autenticação no frontend. |
+| [API REST](backend/docs/API_REST.md) | Contratos e ciclo de vida de lotes. |
+| [Auth0 no backend](backend/docs/AUTH0.md) | Validação JWT e escopo organizacional. |
+| [Contribuindo](docs/CONTRIBUINDO.md) | Commits, checks e migrations. |
+| [Changelog](CHANGELOG.md) | Marcos publicados e política de versões. |
+
+## Contribuição
+
+1. Crie uma branch curta a partir de `main`.
+2. Mantenha cada commit coeso e use Conventional Commits.
+3. Rode os checks aplicáveis antes de abrir uma PR.
+4. Não versione `.env`, backups, tokens, dados reais ou URLs com credenciais.
+5. Não use `git push --force`, rebase, amend ou squash de commits já publicados: o projeto sincroniza com o Lovable e o histórico deve ser aditivo.
+
+Leia [CONTRIBUINDO.md](docs/CONTRIBUINDO.md) para as regras completas.
+
+## Equipe
+
+- Carolina Feitosa — RM 563049
+- Guilherme Machado — RM 564658
+
+---
+
+Feito com React, TypeScript, FastAPI e uma visão prática de reduzir desperdício com responsabilidade.
